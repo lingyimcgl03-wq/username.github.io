@@ -1,0 +1,3488 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#183c32">
+    <title>生日快乐，李汪函</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --forest: #183c32;
+            --deep: #102b25;
+            --paper: #f4f6ed;
+            --ink: #182a25;
+            --muted: #64736a;
+            --coral: #ff755d;
+            --lime: #d7ed79;
+            --sky: #b9d9e9;
+            font-family: "Microsoft YaHei", "Noto Sans SC", sans-serif;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .background-music-control {
+            position: fixed;
+            z-index: 1000;
+            right: max(14px, env(safe-area-inset-right));
+            top: 25%;
+            width: 48px;
+            height: 48px;
+            transform: translateY(-50%);
+            border: 1px solid rgba(244, 246, 237, .5);
+            border-radius: 50%;
+            background: rgba(24, 60, 50, .92);
+            box-shadow: 0 8px 24px rgba(16, 43, 37, .24);
+            color: #f4f6ed;
+            font-size: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+        }
+
+        .background-music-control:hover {
+            background: var(--forest);
+        }
+
+        .background-music-control[aria-pressed="true"] {
+            animation: music-pulse 2.4s ease-in-out infinite;
+        }
+
+        .background-music-panel {
+            position: fixed;
+            z-index: 999;
+            right: max(14px, env(safe-area-inset-right));
+            top: calc(25% + 58px);
+            width: 205px;
+            padding: 12px 13px 10px;
+            transform: translateY(-50%);
+            border: 1px solid rgba(244, 246, 237, .45);
+            border-radius: 18px;
+            background: rgba(24, 60, 50, .94);
+            box-shadow: 0 10px 28px rgba(16, 43, 37, .28);
+            color: #f4f6ed;
+            backdrop-filter: blur(10px);
+        }
+
+        .background-music-panel[hidden] {
+            display: none;
+        }
+
+        .background-music-progress {
+            width: 100%;
+            height: 18px;
+            margin: 0 0 9px;
+            accent-color: var(--lime);
+            cursor: pointer;
+            touch-action: none;
+        }
+
+        .background-music-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .background-music-time {
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .background-music-play {
+            min-width: 58px;
+            padding: 5px 8px;
+            border: 1px solid rgba(244, 246, 237, .45);
+            border-radius: 999px;
+            background: transparent;
+            color: #f4f6ed;
+            cursor: pointer;
+        }
+
+        @keyframes music-pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 24px rgba(16, 43, 37, .24), 0 0 0 0 rgba(215, 237, 121, 0);
+            }
+
+            50% {
+                box-shadow: 0 8px 24px rgba(16, 43, 37, .24), 0 0 0 7px rgba(215, 237, 121, .16);
+            }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-width: 320px;
+            margin: 0;
+            background: var(--paper);
+            color: var(--ink);
+        }
+
+        button {
+            font: inherit;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .cover {
+            min-height: 100svh;
+            padding: 28px clamp(22px, 6vw, 88px) 42px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            color: #fffdf5;
+            background: var(--forest) radial-gradient(#ffffff20 1px, transparent 1px) 0 0 / 19px 19px;
+        }
+
+        .cover__top,
+        .cover__bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            font-size: 13px;
+        }
+
+        .cover__top span:last-child,
+        .cover__bottom span:last-child {
+            color: var(--lime);
+        }
+
+        .cover__content {
+            width: min(1120px, 100%);
+            margin: 60px auto;
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(230px, .75fr);
+            align-items: center;
+            gap: 50px;
+        }
+
+        .eyebrow {
+            margin: 0 0 20px;
+            color: var(--coral);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        h1,
+        h2,
+        p {
+            margin-top: 0;
+        }
+
+        .cover h1 {
+            max-width: 720px;
+            margin-bottom: 22px;
+            font: 500 76px/1.18 Georgia, "Noto Serif SC", "Songti SC", serif;
+        }
+
+        .cover h1 em {
+            color: var(--lime);
+            font-style: normal;
+        }
+
+        .cover__message {
+            max-width: 440px;
+            margin-bottom: 26px;
+            color: #d4dfd5;
+            font-size: 17px;
+            line-height: 1.9;
+        }
+
+        .gift-art {
+            position: relative;
+            width: min(100%, 340px);
+            aspect-ratio: 1;
+            margin: auto;
+            display: grid;
+            place-items: center;
+            border: 1px solid #ffffff70;
+            background: var(--coral);
+            color: var(--deep);
+            transform: rotate(3deg);
+        }
+
+        .gift-art::before,
+        .gift-art::after {
+            position: absolute;
+            content: "";
+            background: var(--lime);
+        }
+
+        .gift-art::before {
+            top: 24%;
+            width: 100%;
+            height: 18px;
+        }
+
+        .gift-art::after {
+            left: calc(50% - 9px);
+            width: 18px;
+            height: 100%;
+        }
+
+        .gift-art__number {
+            z-index: 1;
+            padding: 14px 18px;
+            border: 1px solid var(--deep);
+            background: var(--coral);
+            font: 58px/1 Georgia, serif;
+        }
+
+        .open-button,
+        .game__action {
+            min-height: 50px;
+            padding: 0 19px;
+            border: 0;
+            background: var(--lime);
+            color: var(--deep);
+            font-weight: 700;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .open-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 18px;
+            transition: transform 180ms ease, background 180ms ease;
+        }
+
+        .open-button:hover {
+            transform: translateY(-3px);
+            background: #e5f79a;
+        }
+
+        .open-button span {
+            font-size: 20px;
+        }
+
+        .cover__hint {
+            margin: 12px 0 0;
+            color: #c1d0c4;
+            font-size: 12px;
+        }
+
+        main {
+            padding: 88px clamp(22px, 6vw, 88px) 42px;
+        }
+
+        .content {
+            width: min(1080px, 100%);
+            margin: 0 auto;
+        }
+
+        .intro {
+            max-width: 670px;
+            margin-bottom: 70px;
+        }
+
+        .intro h2,
+        .section-heading h2 {
+            margin-bottom: 16px;
+            font: 500 46px/1.25 Georgia, "Noto Serif SC", "Songti SC", serif;
+        }
+
+        .intro p:last-child,
+        .section-heading p:last-child {
+            margin-bottom: 0;
+            color: var(--muted);
+            line-height: 1.9;
+        }
+
+        .section {
+            padding-bottom: 82px;
+        }
+
+        .section-heading {
+            margin-bottom: 25px;
+        }
+
+        .section-heading h2 {
+            font-size: 38px;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 13px;
+        }
+
+        .memory {
+            overflow: hidden;
+            border: 1px solid #1c342b;
+            background: #fffdf7;
+        }
+
+        .memory__photo {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            display: block;
+            object-fit: cover;
+            background: #e7e9d8;
+        }
+
+        .memory__body {
+            min-height: 146px;
+            padding: 16px 17px 19px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .memory__number {
+            color: var(--muted);
+            font: 13px Georgia, serif;
+        }
+
+        .memory h3 {
+            margin: auto 0 7px;
+            font-size: 18px;
+        }
+
+        .memory p {
+            margin: 0;
+            color: #40534a;
+            font-size: 14px;
+            line-height: 1.75;
+        }
+
+        .notes {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        .notes-panel {
+            padding: clamp(12px, 2.5vw, 22px);
+            border: 1px solid #26483d;
+            background: #e6eee0;
+        }
+
+        .note {
+            min-height: 155px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border-top: 3px solid var(--coral);
+            background: #fffdf7;
+        }
+
+        .note:nth-child(2) {
+            border-color: #7098a7;
+        }
+
+        .note:nth-child(3) {
+            border-color: #9baa4f;
+        }
+
+        .note blockquote {
+            margin: 0 0 16px;
+            font: 16px/1.7 Georgia, "Noto Sans SC", serif;
+        }
+
+        .note p {
+            margin: auto 0 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .notes__danmaku {
+            margin-bottom: 14px;
+            padding: 10px 12px 12px;
+            background: var(--deep);
+        }
+
+        .notes__danmaku-head {
+            margin-bottom: 7px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            color: #d7ed79;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .notes__danmaku-head span:last-child {
+            color: #b7c8bb;
+            font-weight: 400;
+        }
+
+        .notes__tracks {
+            display: grid;
+            grid-template-rows: repeat(3, 32px);
+            gap: 5px;
+        }
+
+        .danmaku__lane {
+            position: relative;
+            width: 100%;
+            height: 32px;
+            overflow: hidden;
+        }
+
+        .danmaku__item {
+            position: absolute;
+            top: 4px;
+            left: 100%;
+            width: max-content;
+            padding: 3px 9px;
+            border: 1px solid #d7ed7960;
+            background: #193d32e8;
+            color: #f4f6ed;
+            font-size: 11px;
+            line-height: 1.4;
+            white-space: nowrap;
+            animation: danmaku-travel var(--duration) linear forwards;
+        }
+
+        .season-game {
+            padding-bottom: 82px;
+        }
+
+        .season-panel {
+            padding: clamp(12px, 3vw, 26px);
+            display: grid;
+            justify-items: center;
+            gap: 24px;
+            border: 1px solid #26483d;
+            background: #e6eee0;
+        }
+
+        .season-frame {
+            width: min(100%, 720px);
+            padding: 9px;
+            border: 2px solid #76513a;
+            background: #c99d68;
+            box-shadow: inset 0 0 0 2px #e8c994, 0 8px 18px #253c3028;
+        }
+
+        .season-frame__art {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            min-height: 160px;
+            overflow: hidden;
+            background: #b9d9e9;
+        }
+
+        .season-artwork {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 700ms ease;
+        }
+
+        .season-artwork.is-active {
+            opacity: 1;
+        }
+
+        .season-frame__caption {
+            min-height: 38px;
+            padding: 9px 4px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 10px;
+            color: #fff6e3;
+            font-size: 13px;
+        }
+
+        .season-frame__caption strong {
+            font-size: 16px;
+        }
+
+        .season-frame__caption span {
+            color: #f0dfc0;
+            font-size: 11px;
+        }
+
+        .season-clock-area {
+            display: grid;
+            justify-items: center;
+            gap: 14px;
+        }
+
+        .season-clock {
+            position: relative;
+            width: min(212px, 58vw);
+            aspect-ratio: 1;
+            border: 8px solid #76513a;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff8e8 0 66%, transparent 67%), repeating-conic-gradient(from -1deg, #698073 0deg 1deg, transparent 1deg 30deg);
+            box-shadow: inset 0 0 0 4px #d9b77f, 0 7px 14px #253c3028;
+        }
+
+        .season-clock::before {
+            position: absolute;
+            inset: 12px;
+            border: 1px solid #aeb8a1;
+            border-radius: 50%;
+            content: "";
+        }
+
+        .season-clock__number {
+            position: absolute;
+            color: var(--forest);
+            font: 700 13px Georgia, serif;
+        }
+
+        .season-clock__number--12 {
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .season-clock__number--3 {
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+        }
+
+        .season-clock__number--6 {
+            bottom: 13px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .season-clock__number--9 {
+            top: 50%;
+            left: 16px;
+            transform: translateY(-50%);
+        }
+
+        .season-clock__hand {
+            position: absolute;
+            z-index: 1;
+            top: 17%;
+            left: calc(50% - 2px);
+            width: 4px;
+            height: 34%;
+            border-radius: 4px;
+            background: var(--coral);
+            transform-origin: 50% 100%;
+            transform: rotate(0deg);
+            transition: transform 1.1s cubic-bezier(.42, 0, .58, 1);
+        }
+
+        .season-clock__hand::after {
+            position: absolute;
+            top: -7px;
+            left: -4px;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #fff8e8;
+            border-radius: 50%;
+            background: var(--coral);
+            content: "";
+        }
+
+        .season-clock__hub {
+            position: absolute;
+            z-index: 2;
+            top: calc(50% - 6px);
+            left: calc(50% - 6px);
+            width: 12px;
+            height: 12px;
+            border: 2px solid #fff8e8;
+            border-radius: 50%;
+            background: var(--forest);
+        }
+
+        .season-clock__controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+
+        .season-turn {
+            min-height: 42px;
+            padding: 0 14px;
+            border: 1px solid var(--forest);
+            background: var(--surface);
+            color: var(--forest);
+            font-weight: 700;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .season-turn:hover:not(:disabled) {
+            background: var(--forest);
+            color: #fffdf6;
+        }
+
+        .season-turn:disabled {
+            cursor: default;
+            opacity: .55;
+        }
+
+        .season-progress {
+            margin: -4px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .season-letter {
+            width: min(100%, 560px);
+            display: grid;
+            justify-items: center;
+            gap: 12px;
+            animation: letter-appear 1.2s ease both;
+        }
+
+        @keyframes letter-appear {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .season-envelope,
+        .season-paper {
+            width: min(100%, 380px);
+            min-height: 70px;
+            padding: 14px 20px;
+            border: 1px solid #9a7049;
+            background: #f3dfb2;
+            color: #573d2c;
+            cursor: pointer;
+            touch-action: manipulation;
+            font: 700 16px Georgia, "Noto Serif SC", "Songti SC", serif;
+        }
+
+        .season-envelope {
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 12px #253c3020;
+        }
+
+        .season-envelope::before {
+            position: absolute;
+            inset: 0;
+            background: #e7c98f;
+            clip-path: polygon(0 0, 100% 0, 50% 67%);
+            content: "";
+            transition: transform 450ms ease;
+            transform-origin: top;
+        }
+
+        .season-envelope.is-open::before {
+            transform: rotateX(180deg);
+        }
+
+        .season-envelope span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .season-paper {
+            background: #fffdf6;
+        }
+
+        .season-letter__message {
+            max-width: 560px;
+            margin: 0;
+            padding: 18px clamp(16px, 4vw, 30px);
+            border-left: 3px solid var(--coral);
+            background: #fffdf6;
+            color: var(--ink);
+            font: 18px/1.9 Georgia, "Noto Serif SC", "Songti SC", serif;
+            text-align: center;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .season-game {
+            padding-bottom: 82px;
+        }
+
+        .season-panel {
+            padding: clamp(12px, 3vw, 26px);
+            display: grid;
+            gap: 24px;
+            border: 1px solid #26483d;
+            background: #e6eee0;
+        }
+
+        .season-frame {
+            padding: 9px;
+            border: 2px solid #76513a;
+            background: #c99d68;
+            box-shadow: inset 0 0 0 2px #e8c994, 0 8px 18px #253c3028;
+        }
+
+        .season-frame__art {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            min-height: 180px;
+            overflow: hidden;
+            background: #b9d9e9;
+        }
+
+        .season-artwork {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+
+            .season-game {
+                padding-bottom: 82px;
+            }
+
+            .season-panel {
+                padding: clamp(12px, 3vw, 26px);
+                display: grid;
+                justify-items: center;
+                gap: 24px;
+                border: 1px solid #26483d;
+                background: #e6eee0;
+            }
+
+            .season-frame {
+                width: min(100%, 720px);
+                padding: 9px;
+                border: 2px solid #76513a;
+                background: #c99d68;
+                box-shadow: inset 0 0 0 2px #e8c994, 0 8px 18px #253c3028;
+            }
+
+            .season-frame__art {
+                position: relative;
+                width: 100%;
+                aspect-ratio: 16 / 9;
+                min-height: 170px;
+                overflow: hidden;
+                background: #b9d9e9;
+            }
+
+            .season-artwork {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                transition: opacity 700ms ease;
+            }
+
+            .season-artwork.is-active {
+                opacity: 1;
+            }
+
+            .season-frame__caption {
+                min-height: 37px;
+                padding: 9px 4px 0;
+                display: flex;
+                justify-content: space-between;
+                align-items: baseline;
+                gap: 10px;
+                color: #fff6e3;
+                font-size: 13px;
+            }
+
+            .season-frame__caption strong {
+                font-size: 16px;
+            }
+
+            .season-frame__caption span {
+                color: #f0dfc0;
+                font-size: 11px;
+            }
+
+            .season-clock-area {
+                display: grid;
+                justify-items: center;
+                gap: 15px;
+            }
+
+            .season-clock {
+                position: relative;
+                width: min(212px, 58vw);
+                aspect-ratio: 1;
+                border: 8px solid #76513a;
+                border-radius: 50%;
+                background: radial-gradient(circle, #fff8e8 0 66%, transparent 67%), repeating-conic-gradient(from -1deg, #698073 0deg 1deg, transparent 1deg 30deg);
+                box-shadow: inset 0 0 0 4px #d9b77f, 0 7px 14px #253c3028;
+            }
+
+            .season-clock::before {
+                position: absolute;
+                inset: 12px;
+                border: 1px solid #aeb8a1;
+                border-radius: 50%;
+                content: "";
+            }
+
+            .season-clock__number {
+                position: absolute;
+                color: var(--forest);
+                font: 700 13px Georgia, serif;
+            }
+
+            .season-clock__number--12 {
+                top: 14px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .season-clock__number--3 {
+                top: 50%;
+                right: 16px;
+                transform: translateY(-50%);
+            }
+
+            .season-clock__number--6 {
+                bottom: 13px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .season-clock__number--9 {
+                top: 50%;
+                left: 16px;
+                transform: translateY(-50%);
+            }
+
+            .season-clock__hand {
+                position: absolute;
+                z-index: 1;
+                top: 17%;
+                left: calc(50% - 2px);
+                width: 4px;
+                height: 34%;
+                border-radius: 4px;
+                background: var(--coral);
+                transform-origin: 50% 100%;
+                transform: rotate(0deg);
+                transition: transform 1.1s cubic-bezier(.42, 0, .58, 1);
+            }
+
+            .season-clock__hand::after {
+                position: absolute;
+                top: -7px;
+                left: -4px;
+                width: 12px;
+                height: 12px;
+                border: 2px solid #fff8e8;
+                border-radius: 50%;
+                background: var(--coral);
+                content: "";
+            }
+
+            .season-clock__hub {
+                position: absolute;
+                z-index: 2;
+                top: calc(50% - 6px);
+                left: calc(50% - 6px);
+                width: 12px;
+                height: 12px;
+                border: 2px solid #fff8e8;
+                border-radius: 50%;
+                background: var(--forest);
+            }
+
+            .season-clock__controls {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 9px;
+            }
+
+            .season-turn {
+                min-height: 42px;
+                padding: 0 14px;
+                border: 1px solid var(--forest);
+                background: var(--surface);
+                color: var(--forest);
+                font-weight: 700;
+                cursor: pointer;
+                touch-action: manipulation;
+            }
+
+            .season-turn:hover:not(:disabled) {
+                background: var(--forest);
+                color: #fffdf6;
+            }
+
+            .season-turn:disabled {
+                cursor: default;
+                opacity: .55;
+            }
+
+            .season-progress {
+                margin: -5px 0 0;
+                color: var(--muted);
+                font-size: 12px;
+                text-align: center;
+            }
+
+            .season-letter {
+                width: min(100%, 560px);
+                display: grid;
+                justify-items: center;
+                gap: 12px;
+                animation: letter-appear 1.2s ease both;
+            }
+
+            @keyframes letter-appear {
+                from {
+                    opacity: 0;
+                    transform: translateY(12px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .season-envelope,
+            .season-paper {
+                width: min(100%, 380px);
+                min-height: 70px;
+                padding: 14px 20px;
+                border: 1px solid #9a7049;
+                background: #f3dfb2;
+                color: #573d2c;
+                cursor: pointer;
+                touch-action: manipulation;
+                font: 700 16px Georgia, "Noto Serif SC", "Songti SC", serif;
+            }
+
+            .season-envelope {
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 5px 12px #253c3020;
+            }
+
+            .season-envelope::before {
+                position: absolute;
+                inset: 0;
+                background: #e7c98f;
+                clip-path: polygon(0 0, 100% 0, 50% 67%);
+                content: "";
+                transition: transform 450ms ease;
+                transform-origin: top;
+            }
+
+            .season-envelope.is-open::before {
+                transform: rotateX(180deg);
+            }
+
+            .season-envelope span {
+                position: relative;
+                z-index: 1;
+            }
+
+            .season-paper {
+                background: #fffdf6;
+            }
+
+            .season-letter__message {
+                max-width: 560px;
+                margin: 0;
+                padding: 18px clamp(16px, 4vw, 30px);
+                border-left: 3px solid var(--coral);
+                background: #fffdf6;
+                color: var(--ink);
+                font: 18px/1.9 Georgia, "Noto Serif SC", "Songti SC", serif;
+                text-align: center;
+            }
+
+            [hidden] {
+                display: none !important;
+            }
+
+            opacity: 0;
+            transition: opacity 700ms ease;
+        }
+
+        .season-artwork.is-active {
+            opacity: 1;
+        }
+
+        .season-frame__caption {
+            min-height: 37px;
+            padding: 9px 4px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 10px;
+            color: #fff6e3;
+            font-size: 13px;
+        }
+
+        .season-frame__caption strong {
+            font-size: 16px;
+        }
+
+        .season-frame__caption span {
+            color: #f0dfc0;
+            font-size: 11px;
+        }
+
+        .season-clock-area {
+            display: grid;
+            justify-items: center;
+            gap: 15px;
+        }
+
+        .season-clock {
+            position: relative;
+            width: min(212px, 58vw);
+            aspect-ratio: 1;
+            border: 8px solid #76513a;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle, #fff8e8 0 66%, transparent 67%),
+                repeating-conic-gradient(from -1deg, #698073 0deg 1deg, transparent 1deg 30deg);
+            box-shadow: inset 0 0 0 4px #d9b77f, 0 7px 14px #253c3028;
+        }
+
+        .season-clock::before {
+            position: absolute;
+            inset: 12px;
+            border: 1px solid #aeb8a1;
+            border-radius: 50%;
+            content: "";
+        }
+
+        .season-clock__number {
+            position: absolute;
+            color: var(--forest);
+            font: 700 13px Georgia, serif;
+        }
+
+        .season-clock__number--12 {
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .season-clock__number--3 {
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+        }
+
+        .season-clock__number--6 {
+            bottom: 13px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .season-clock__number--9 {
+            top: 50%;
+            left: 16px;
+            transform: translateY(-50%);
+        }
+
+        .season-clock__hand {
+            position: absolute;
+            z-index: 1;
+            top: 17%;
+            left: calc(50% - 2px);
+            width: 4px;
+            height: 34%;
+            border-radius: 4px;
+            background: var(--coral);
+            transform-origin: 50% 100%;
+            transform: rotate(0deg);
+        }
+
+        .season-clock__hand::after {
+            position: absolute;
+            top: -7px;
+            left: -4px;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #fff8e8;
+            border-radius: 50%;
+            background: var(--coral);
+            content: "";
+        }
+
+        .season-clock__hub {
+            position: absolute;
+            z-index: 2;
+            top: calc(50% - 6px);
+            left: calc(50% - 6px);
+            width: 12px;
+            height: 12px;
+            border: 2px solid #fff8e8;
+            border-radius: 50%;
+            background: var(--forest);
+        }
+
+        .season-clock__controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+
+        .season-turn {
+            min-height: 42px;
+            padding: 0 14px;
+            border: 1px solid var(--forest);
+            background: var(--surface);
+            color: var(--forest);
+            font-weight: 700;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .season-turn:hover:not(:disabled) {
+            background: var(--forest);
+            color: #fffdf6;
+        }
+
+        .season-turn:disabled {
+            cursor: default;
+            opacity: .55;
+        }
+
+        .season-progress {
+            margin: 0;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .season-letter {
+            display: grid;
+            justify-items: center;
+            gap: 14px;
+            opacity: 1;
+            transition: opacity 900ms ease;
+        }
+
+        .season-letter.is-revealing {
+            animation: letter-appear 1.2s ease both;
+        }
+
+        @keyframes letter-appear {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .season-envelope,
+        .season-paper {
+            width: min(100%, 340px);
+            min-height: 72px;
+            padding: 15px 20px;
+            border: 1px solid #9a7049;
+            background: #f3dfb2;
+            color: #573d2c;
+            cursor: pointer;
+            touch-action: manipulation;
+            font-weight: 700;
+        }
+
+        .season-envelope {
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 12px #253c3020;
+        }
+
+        .season-envelope::before {
+            position: absolute;
+            inset: 0;
+            background: #e7c98f;
+            clip-path: polygon(0 0, 100% 0, 50% 67%);
+            content: "";
+            transition: transform 450ms ease;
+            transform-origin: top;
+        }
+
+        .season-envelope.is-open::before {
+            transform: rotateX(180deg);
+        }
+
+        .season-envelope span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .season-paper {
+            background: #fffdf6;
+            line-height: 1.8;
+        }
+
+        .season-letter__message {
+            max-width: 600px;
+            margin: 0;
+            padding: 18px clamp(16px, 4vw, 30px);
+            border-left: 3px solid var(--coral);
+            background: #fffdf6;
+            color: var(--ink);
+            font: 18px/1.9 Georgia, "Noto Serif SC", "Songti SC", serif;
+            text-align: center;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        @keyframes danmaku-travel {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(calc(-100vw - 100%));
+            }
+        }
+
+        .game {
+            padding: 34px clamp(22px, 5vw, 54px);
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(260px, .8fr);
+            align-items: center;
+            gap: 30px;
+            background: #e6eee0;
+        }
+
+        .game h2 {
+            margin-bottom: 12px;
+            font: 500 34px/1.3 Georgia, "Noto Serif SC", "Songti SC", serif;
+        }
+
+        .game__copy {
+            max-width: 470px;
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .game__play {
+            display: grid;
+            justify-items: center;
+            gap: 12px;
+        }
+
+        .cake {
+            position: relative;
+            width: min(286px, 100%);
+            height: 220px;
+            padding: 0;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .cake__candles {
+            position: absolute;
+            z-index: 4;
+            inset: 0;
+            pointer-events: none;
+        }
+
+        .candle-ring {
+            position: absolute;
+            left: 50%;
+            height: 22px;
+            transform: translateX(-50%);
+        }
+
+        .candle-ring--top {
+            top: 67px;
+            width: 136px;
+        }
+
+        .candle-ring--middle {
+            top: 103px;
+            width: 202px;
+        }
+
+        .candle-ring--bottom {
+            top: 145px;
+            width: 264px;
+        }
+
+        .candle {
+            position: absolute;
+            top: var(--candle-top);
+            left: var(--candle-left);
+            width: 9px;
+            height: 28px;
+            margin-left: -4.5px;
+            flex: 0 0 auto;
+            border: 1px solid #fffdf7;
+            border-radius: 3px 3px 1px 1px;
+            background: repeating-linear-gradient(135deg, #62b8e3 0 4px, #e6f5fb 4px 7px);
+            opacity: 0;
+            transform: translateY(-28px) scale(.82);
+            animation: candle-in .58s cubic-bezier(.22, .72, .28, 1.08) var(--delay, 0ms) both;
+        }
+
+        .candle::before {
+            position: absolute;
+            top: -9px;
+            left: 50%;
+            width: 6px;
+            height: 8px;
+            border-radius: 50% 50% 50% 0;
+            background: #ffcb55;
+            content: "";
+            transform: translateX(-50%) rotate(-45deg);
+            box-shadow: 0 0 10px #ffcb5570;
+        }
+
+        .cake.is-out .candle::before {
+            display: none;
+        }
+
+        .cake__tier {
+            position: absolute;
+            left: 50%;
+            border: 1px solid #6f4437;
+            border-radius: 0 0 50% 50% / 0 0 20% 20%;
+            transform: translateX(-50%);
+            box-shadow: inset 0 -12px #bd6f55, 0 5px 0 #9b5b43, 0 8px 10px #6f443744;
+        }
+
+        .cake__tier::before {
+            position: absolute;
+            z-index: 1;
+            top: -11px;
+            right: -2px;
+            left: -2px;
+            height: 22px;
+            border: 1px solid #fff5dc;
+            border-radius: 50%;
+            background: radial-gradient(ellipse at 35% 28%, #fff8e9 0%, #f6dfa9 58%, #e6bd7f 100%);
+            content: "";
+            box-shadow: inset 0 -3px 0 #c8945e, 0 2px 0 #9b5b43;
+        }
+
+        .cake__tier::after {
+            position: absolute;
+            right: 14%;
+            bottom: 11px;
+            left: 14%;
+            height: 4px;
+            border-radius: 50%;
+            background: #f5d6a77a;
+            content: "";
+        }
+
+        .cake__tier--top {
+            bottom: 102px;
+            width: 130px;
+            height: 40px;
+            z-index: 3;
+            background: linear-gradient(90deg, #bd7359 0%, #efbd87 24%, #e4a174 72%, #b7654d 100%);
+        }
+
+        .cake__tier--middle {
+            bottom: 56px;
+            width: 196px;
+            height: 50px;
+            z-index: 2;
+            background: linear-gradient(90deg, #b9664e 0%, #e7a477 18%, #dc9068 76%, #a95443 100%);
+        }
+
+        .cake__tier--bottom {
+            bottom: 8px;
+            width: 258px;
+            height: 56px;
+            z-index: 1;
+            background: linear-gradient(90deg, #a95f49 0%, #dc9671 16%, #d48161 76%, #994c3e 100%);
+        }
+
+        @keyframes candle-in {
+            0% {
+                opacity: 0;
+                transform: translateY(-28px) scale(.82);
+            }
+
+            72% {
+                opacity: 1;
+                transform: translateY(3px) scale(1.08);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .game__status,
+        .fortune-result {
+            min-height: 24px;
+            margin: 0;
+            color: var(--ink);
+            font-size: 14px;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        .game__action {
+            min-height: 44px;
+            background: var(--forest);
+            color: #fffdf5;
+        }
+
+        .fortune-result {
+            max-width: 290px;
+            color: var(--forest);
+            font-weight: 700;
+        }
+
+        .surprise {
+            padding: clamp(26px, 5vw, 54px);
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 28px;
+            background: var(--forest);
+            color: #fffdf5;
+        }
+
+        .surprise h2 {
+            margin-bottom: 12px;
+            font: 500 34px/1.3 Georgia, "Noto Serif SC", "Songti SC", serif;
+        }
+
+        .surprise__intro {
+            max-width: 570px;
+            margin: 0;
+            color: #d4dfd5;
+            line-height: 1.8;
+        }
+
+        .surprise__button {
+            min-height: 48px;
+            padding: 0 17px;
+            border: 1px solid var(--lime);
+            background: transparent;
+            color: var(--lime);
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .surprise__button:hover {
+            background: var(--lime);
+            color: var(--deep);
+        }
+
+        .surprise__reveal {
+            margin: 0;
+            padding-top: 22px;
+            border-top: 1px solid #ffffff50;
+            color: var(--lime);
+            font-size: 18px;
+            line-height: 1.9;
+        }
+
+        .surprise__egg {
+            display: grid;
+            grid-template-columns: 96px minmax(0, 680px);
+            align-items: center;
+            gap: clamp(18px, 4vw, 42px);
+            width: calc(100% - clamp(44px, 10vw, 88px) * 2);
+            margin: 22px auto 38px;
+        }
+
+        .surprise__egg[hidden] {
+            display: none;
+        }
+
+        .surprise__egg-image {
+            width: 100%;
+            max-height: 96px;
+            display: block;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .surprise__egg-message {
+            margin: 0;
+            color: var(--ink);
+            width: 100%;
+            max-width: 680px;
+            font-size: clamp(12px, 1.6vw, 15px);
+            line-height: 1.45;
+        }
+
+        @media (max-width: 680px) {
+            .surprise__egg {
+                grid-template-columns: 76px minmax(0, 430px);
+                gap: 12px;
+            }
+
+            .surprise__egg-message {
+                font-size: 12px;
+                line-height: 1.45;
+            }
+        }
+
+        .surprise__content {
+            grid-column: 1 / -1;
+            display: grid;
+            gap: 20px;
+        }
+
+        .surprise__image {
+            width: min(100%, 840px);
+            max-height: 72svh;
+            display: block;
+            object-fit: contain;
+            cursor: pointer;
+            transition: opacity 1.8s ease;
+        }
+
+        .surprise__credits-frame {
+            position: relative;
+            width: min(100%, 840px);
+            max-height: 72svh;
+            overflow: hidden;
+            border: 1px solid transparent;
+            border-radius: 4px;
+        }
+
+        .surprise__credits-frame .surprise__image {
+            width: 100%;
+            height: 100%;
+        }
+
+        .surprise__credits-frame.is-playing {
+            border-color: #fffdf5;
+            background: #09110e;
+        }
+
+        .surprise__credits {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .surprise__fell-title {
+            position: absolute;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            z-index: 2;
+            opacity: 0;
+            color: #fffdf5;
+            font-family: Georgia, "Noto Serif SC", "Songti SC", serif;
+            font-size: clamp(24px, 5vw, 42px);
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-align: center;
+            text-shadow: 0 3px 18px #000;
+            pointer-events: none;
+            transition: opacity .8s ease;
+        }
+
+        .surprise__credits-frame.is-fell .surprise__fell-title {
+            opacity: 1;
+        }
+
+        .surprise__credits-list {
+            width: 100%;
+            padding: 0 16px 24px;
+            color: #fffdf5;
+            text-align: center;
+            font-size: clamp(14px, 2.2vw, 20px);
+            line-height: 1.8;
+            text-shadow: 0 2px 8px #09110e;
+        }
+
+        .surprise__credits-list span {
+            display: block;
+            white-space: nowrap;
+            margin-bottom: 2.7em;
+        }
+
+        .surprise__credits-frame.is-credits-started .surprise__credits {
+            opacity: 1;
+        }
+
+        .surprise__credits-track {
+            width: 100%;
+            animation: surprise-credits-scroll 18s linear 0s infinite;
+        }
+
+        .surprise__credits-group {
+            padding-bottom: 3em;
+        }
+
+        .surprise__credits-track .surprise__credits-list:last-child {
+            padding-bottom: 24px;
+        }
+
+        @keyframes surprise-credits-scroll {
+            from { transform: translateY(calc(100% + 24px)); }
+            to { transform: translateY(-50%); }
+        }
+
+        .surprise__controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .surprise__control {
+            min-height: 44px;
+            padding: 0 14px;
+            border: 1px solid #ffffff70;
+            background: transparent;
+            color: #fffdf5;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .surprise__control:hover {
+            border-color: var(--lime);
+            color: var(--lime);
+        }
+
+        .surprise__audio {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+        }
+
+        .surprise__content .surprise__reveal {
+            max-width: 820px;
+        }
+
+        .footer {
+            padding-top: 28px;
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .fireworks {
+            position: fixed;
+            z-index: 20;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        @media (max-width: 900px) {
+            .cover__content {
+                grid-template-columns: minmax(0, 1fr) minmax(190px, .7fr);
+                gap: 28px;
+            }
+
+            .cover h1 {
+                font-size: 60px;
+            }
+
+            .memory-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 680px) {
+            .cover {
+                padding-top: 22px;
+            }
+
+            .cover__content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                margin: 42px auto;
+            }
+
+            .cover h1 {
+                font-size: 50px;
+            }
+
+            .gift-art {
+                width: min(54vw, 210px);
+            }
+
+            .gift-art__number {
+                font-size: 42px;
+            }
+
+            main {
+                padding-top: 62px;
+            }
+
+            .intro {
+                margin-bottom: 54px;
+            }
+
+            .intro h2,
+            .section-heading h2 {
+                font-size: 35px;
+            }
+
+            .notes,
+            .game,
+            .surprise {
+                grid-template-columns: 1fr;
+            }
+
+            .game {
+                gap: 20px;
+            }
+
+            .note {
+                min-height: auto;
+            }
+
+            .surprise__button {
+                justify-self: start;
+            }
+
+            .danmaku__item {
+                font-size: 10px;
+            }
+
+            .surprise__reveal {
+                font-size: 16px;
+            }
+
+            .season-game {
+                padding-bottom: 58px;
+            }
+
+            .season-panel {
+                gap: 20px;
+            }
+
+            .season-frame {
+                padding: 7px;
+            }
+
+            .season-frame__art {
+                min-height: 155px;
+            }
+
+            .season-clock {
+                width: min(194px, 54vw);
+            }
+
+            .season-turn {
+                min-height: 44px;
+                padding: 0 12px;
+                font-size: 13px;
+            }
+
+            .season-letter__message {
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 420px) {
+
+            .cover__top,
+            .cover__bottom {
+                font-size: 11px;
+            }
+
+            .cover h1 {
+                font-size: 44px;
+            }
+
+            .memory-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .memory__photo {
+                aspect-ratio: 4 / 3;
+            }
+
+            .footer {
+                flex-direction: column;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                transition-duration: 0.01ms !important;
+                animation-duration: 0.01ms !important;
+            }
+        }
+    </style>
+    <style>
+        .season-game {
+            padding-bottom: 72px;
+        }
+
+        .season-panel {
+            width: 100%;
+            padding: clamp(14px, 3vw, 26px);
+            display: grid;
+            justify-items: center;
+            gap: 24px;
+            border: 1px solid #26483d;
+            background: #e6eee0;
+        }
+
+        .season-frame {
+            width: min(100%, 700px);
+            padding: 9px;
+            border: 2px solid #76513a;
+            background: #c99d68;
+            box-shadow: inset 0 0 0 2px #e8c994, 0 8px 18px #253c3028;
+        }
+
+        .season-frame__art {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            min-height: 160px;
+            overflow: hidden;
+            background: #b9d9e9;
+        }
+
+        .season-artwork {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 700ms ease;
+        }
+
+        .season-artwork.is-active {
+            opacity: 1;
+        }
+
+        .season-frame__caption {
+            min-height: 38px;
+            padding: 9px 4px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 10px;
+            color: #fff6e3;
+            font-size: 13px;
+        }
+
+        .season-frame__caption strong {
+            font-size: 16px;
+        }
+
+        .season-frame__caption span {
+            color: #f0dfc0;
+            font-size: 11px;
+        }
+
+        .season-clock-area {
+            display: grid;
+            justify-items: center;
+            gap: 14px;
+        }
+
+        .season-clock {
+            position: relative;
+            width: min(212px, 58vw);
+            aspect-ratio: 1;
+            border: 8px solid #76513a;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff8e8 0 66%, transparent 67%), repeating-conic-gradient(from -1deg, #698073 0deg 1deg, transparent 1deg 30deg);
+            box-shadow: inset 0 0 0 4px #d9b77f, 0 7px 14px #253c3028;
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .season-clock:active,
+        .season-clock.is-dragging {
+            cursor: grabbing;
+        }
+
+        .season-clock::before {
+            position: absolute;
+            inset: 12px;
+            border: 1px solid #aeb8a1;
+            border-radius: 50%;
+            content: "";
+        }
+
+        .season-clock__number {
+            position: absolute;
+            color: var(--forest);
+            font: 700 13px Georgia, serif;
+        }
+
+        .season-clock__number--12 {
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .season-clock__number--3 {
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+        }
+
+        .season-clock__number--6 {
+            bottom: 13px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .season-clock__number--9 {
+            top: 50%;
+            left: 16px;
+            transform: translateY(-50%);
+        }
+
+        .season-clock__hand {
+            position: absolute;
+            z-index: 1;
+            top: 17%;
+            left: calc(50% - 2px);
+            width: 4px;
+            height: 34%;
+            border-radius: 4px;
+            background: var(--coral);
+            transform-origin: 50% 100%;
+            transform: rotate(0deg);
+            transition: transform 1.1s cubic-bezier(.42, 0, .58, 1);
+        }
+
+        .season-clock.is-dragging .season-clock__hand {
+            transition: none;
+        }
+
+        .season-clock__hand::after {
+            position: absolute;
+            top: -7px;
+            left: -4px;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #fff8e8;
+            border-radius: 50%;
+            background: var(--coral);
+            content: "";
+        }
+
+        .season-clock__hub {
+            position: absolute;
+            z-index: 2;
+            top: calc(50% - 6px);
+            left: calc(50% - 6px);
+            width: 12px;
+            height: 12px;
+            border: 2px solid #fff8e8;
+            border-radius: 50%;
+            background: var(--forest);
+            pointer-events: none;
+        }
+
+        .season-clock__controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+
+        .season-turn {
+            min-height: 42px;
+            padding: 0 14px;
+            border: 1px solid var(--forest);
+            background: var(--surface);
+            color: var(--forest);
+            font-weight: 700;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .season-turn:hover:not(:disabled) {
+            background: var(--forest);
+            color: #fffdf6;
+        }
+
+        .season-turn:disabled {
+            cursor: default;
+            opacity: .55;
+        }
+
+        .season-progress {
+            margin: -4px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        .season-letter {
+            width: min(100%, 560px);
+            display: grid;
+            justify-items: center;
+            gap: 12px;
+            animation: letter-appear 1.2s ease both;
+        }
+
+        @keyframes letter-appear {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .season-envelope,
+        .season-paper {
+            width: min(100%, 380px);
+            min-height: 70px;
+            padding: 14px 20px;
+            border: 1px solid #9a7049;
+            background: #f3dfb2;
+            color: #573d2c;
+            cursor: pointer;
+            touch-action: manipulation;
+            font: 700 16px Georgia, "Noto Serif SC", "Songti SC", serif;
+        }
+
+        .season-envelope {
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 12px #253c3020;
+        }
+
+        .season-envelope::before {
+            position: absolute;
+            inset: 0;
+            background: #e7c98f;
+            clip-path: polygon(0 0, 100% 0, 50% 67%);
+            content: "";
+            transition: transform 450ms ease;
+            transform-origin: top;
+        }
+
+        .season-envelope.is-open::before {
+            transform: rotateX(180deg);
+        }
+
+        .season-envelope span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .season-paper {
+            background: #fffdf6;
+            line-height: 1.8;
+        }
+
+        .season-letter__message {
+            max-width: 560px;
+            margin: 0;
+            padding: 18px clamp(16px, 4vw, 30px);
+            border-left: 3px solid var(--coral);
+            background: #fffdf6;
+            color: var(--ink);
+            font: 18px/1.9 Georgia, "Noto Serif SC", "Songti SC", serif;
+            text-align: center;
+        }
+
+        @media (max-width: 680px) {
+            .season-game {
+                padding-bottom: 58px;
+            }
+
+            .season-panel {
+                gap: 20px;
+            }
+
+            .season-frame {
+                padding: 7px;
+            }
+
+            .season-frame__art {
+                min-height: 155px;
+            }
+
+            .season-clock {
+                width: min(194px, 54vw);
+            }
+
+            .season-turn {
+                min-height: 44px;
+                padding: 0 12px;
+                font-size: 13px;
+            }
+
+            .season-letter__message {
+                font-size: 16px;
+            }
+        }
+
+
+        .season-widget {
+            width: min(100%, 720px);
+            --forest: #183c32;
+            --coral: #ff755d;
+            --ink: #182a25;
+            --muted: #64736a;
+        }
+
+        .season-heading {
+            margin-bottom: 20px;
+        }
+
+        .season-heading .eyebrow {
+            margin: 0 0 8px;
+            color: var(--coral);
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .season-heading h2 {
+            margin: 0 0 8px;
+            font: 500 38px/1.25 Georgia, "Noto Serif SC", serif;
+            color: var(--forest);
+        }
+
+        .season-heading p {
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.8;
+        }
+
+        .season-panel {
+            padding: 20px;
+            display: grid;
+            justify-items: center;
+            gap: 24px;
+            border: 1px solid #26483d;
+            background: #e6eee0;
+            border-radius: 6px;
+        }
+
+        /* ===== 画框 ===== */
+        .season-frame {
+            width: min(100%, 700px);
+            padding: 9px;
+            border: 2px solid #76513a;
+            background: #c99d68;
+            box-shadow: inset 0 0 0 2px #e8c994, 0 8px 18px #253c3028;
+            border-radius: 4px;
+        }
+
+        .season-frame__art {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%;
+            overflow: hidden;
+            background: #b9d9e9;
+            border-radius: 2px;
+        }
+
+        .season-artwork {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .season-artwork.is-active {
+            opacity: 1;
+        }
+
+        /* ===== 时钟 ===== */
+        .season-clock-area {
+            display: grid;
+            justify-items: center;
+            gap: 14px;
+        }
+
+        .season-clock {
+            position: relative;
+            width: min(212px, 58vw);
+            aspect-ratio: 1;
+            border: 8px solid #76513a;
+            border-radius: 50%;
+            background:
+                radial-gradient(circle, #fff8e8 0 66%, transparent 67%),
+                repeating-conic-gradient(from -1deg, #698073 0deg 1deg, transparent 1deg 30deg);
+            box-shadow: inset 0 0 0 4px #d9b77f, 0 7px 14px #253c3028;
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .season-clock:active,
+        .season-clock.is-dragging {
+            cursor: grabbing;
+        }
+
+        .season-clock::before {
+            position: absolute;
+            inset: 12px;
+            border: 1px solid #aeb8a1;
+            border-radius: 50%;
+            content: "";
+            pointer-events: none;
+        }
+
+        .season-clock__number {
+            position: absolute;
+            color: var(--forest);
+            font: 700 13px Georgia, serif;
+            pointer-events: none;
+        }
+
+        .season-clock__number--12 {
+            top: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .season-clock__number--3 {
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+        }
+
+        .season-clock__number--6 {
+            bottom: 13px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .season-clock__number--9 {
+            top: 50%;
+            left: 16px;
+            transform: translateY(-50%);
+        }
+
+        .season-clock__minute {
+            position: absolute;
+            z-index: 1;
+            top: 12%;
+            left: calc(50% - 2px);
+            width: 4px;
+            height: 38%;
+            border-radius: 4px;
+            background: var(--coral);
+            transform-origin: 50% 100%;
+            transform: rotate(0deg);
+            transition: transform 0.35s cubic-bezier(.42, 0, .58, 1);
+            pointer-events: none;
+        }
+
+        .season-clock__minute::after {
+            position: absolute;
+            top: -7px;
+            left: -4px;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #fff8e8;
+            border-radius: 50%;
+            background: var(--coral);
+            content: "";
+        }
+
+        .season-clock.is-dragging .season-clock__minute {
+            transition: none;
+        }
+
+        .season-clock__hub {
+            position: absolute;
+            z-index: 2;
+            top: calc(50% - 6px);
+            left: calc(50% - 6px);
+            width: 12px;
+            height: 12px;
+            border: 2px solid #fff8e8;
+            border-radius: 50%;
+            background: var(--forest);
+            pointer-events: none;
+        }
+
+        /* ===== 信件区域（随四季轮转逐渐出现） ===== */
+        .season-letter {
+            width: min(100%, 480px);
+            display: grid;
+            justify-items: center;
+            gap: 0;
+            opacity: 0;
+            transform: translateY(50px) scale(0.92);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        /* 信封：纯 SVG 图片 */
+        .letter-envelope {
+            width: min(100%, 300px);
+            cursor: pointer;
+            outline: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 0.35s ease;
+        }
+
+        .letter-envelope:hover {
+            transform: translateY(-4px);
+        }
+
+        .letter-envelope:focus-visible {
+            outline: 2px solid var(--coral);
+            outline-offset: 6px;
+            border-radius: 8px;
+        }
+
+        .letter-envelope.is-open {
+            cursor: default;
+        }
+
+        .envelope-svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            overflow: visible;
+            filter: drop-shadow(0 6px 14px rgba(37, 60, 48, 0.18));
+        }
+
+        .envelope-flap {
+            transform-box: fill-box;
+            transform-origin: 50% 0%;
+            transition: transform 0.6s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .letter-envelope.is-open .envelope-flap {
+            transform: rotateX(180deg);
+        }
+
+        /* 信纸：从信封里慢慢浮现，同时由小变大 */
+        .letter-paper {
+            width: min(100%, 300px);
+            margin-top: -6px;
+            position: relative;
+            z-index: 2;
+            padding: 24px 22px;
+            background: #fffdf6;
+            border: 1px solid #c9a87a;
+            border-left: 3px solid var(--coral);
+            border-radius: 4px;
+            box-shadow: 0 8px 20px rgba(37, 60, 48, 0.12);
+            font: 16px/1.9 Georgia, "Noto Serif SC", "Songti SC", serif;
+            color: #573d2c;
+            text-align: center;
+            transform-origin: 50% 0;
+            animation: paper-emerge 1.1s cubic-bezier(.22, .68, .32, 1) both;
+        }
+
+        .letter-paper p {
+            margin: 0;
+        }
+
+        @keyframes paper-emerge {
+            from {
+                opacity: 0;
+                transform: translateY(-46px) scale(0.3);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @media (max-width: 680px) {
+            .season-heading h2 {
+                font-size: 30px;
+            }
+
+            .season-clock {
+                width: min(194px, 54vw);
+            }
+
+            .letter-paper {
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .section.season-game {
+                width: 100%;
+                padding-inline: 12px;
+            }
+
+            .season-game .season-widget {
+                width: 100%;
+                min-width: 0;
+            }
+
+            .season-game .season-heading {
+                padding-inline: 2px;
+                margin-bottom: 14px;
+            }
+
+            .season-game .season-heading h2 {
+                font-size: clamp(28px, 9vw, 32px);
+            }
+
+            .season-game .season-heading p {
+                font-size: 14px;
+                line-height: 1.65;
+            }
+
+            .season-game .season-panel {
+                width: 100%;
+                padding: 10px;
+                gap: 18px;
+                border-radius: 4px;
+            }
+
+            .season-game .season-frame {
+                width: 100%;
+                padding: 5px;
+            }
+
+            .season-game .season-frame__art {
+                aspect-ratio: 16 / 9;
+                padding-top: 0;
+            }
+
+            .season-game .season-artwork {
+                display: block;
+                object-fit: contain;
+                object-position: center;
+            }
+
+            .season-game .season-clock-area,
+            .season-game .season-letter {
+                width: 100%;
+            }
+
+            .season-game .season-clock {
+                width: min(168px, 46vw);
+                border-width: 6px;
+            }
+
+            .season-game .season-clock__number {
+                font-size: 12px;
+            }
+
+            .season-game .season-clock__number--12 {
+                top: 11px;
+            }
+
+            .season-game .season-clock__number--3 {
+                right: 12px;
+            }
+
+            .season-game .season-clock__number--6 {
+                bottom: 10px;
+            }
+
+            .season-game .season-clock__number--9 {
+                left: 12px;
+            }
+
+            .season-game .letter-envelope {
+                width: min(250px, 82vw);
+            }
+
+            .season-game .letter-paper {
+                width: min(250px, 82vw);
+                padding: 18px 16px;
+                font-size: 14px;
+                line-height: 1.75;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .section.season-game {
+                padding-inline: 8px;
+            }
+
+            .season-game .season-panel {
+                padding: 7px;
+            }
+
+            .season-game .season-clock {
+                width: min(150px, 48vw);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="background-music" preload="metadata" loop autoplay>
+        <source src="ncnl.mp3">
+    </audio>
+    <button class="background-music-control" id="background-music-toggle" type="button" aria-label="展开背景音乐控制"
+        aria-expanded="false" title="背景音乐控制">♪</button>
+    <div class="background-music-panel" id="background-music-panel" hidden>
+        <input class="background-music-progress" id="background-music-progress" type="range" min="0" max="1000"
+            value="0" step="1" aria-label="背景音乐播放进度">
+        <div class="background-music-meta">
+            <span class="background-music-time" id="background-music-time">00:00 / 00:00</span>
+            <button class="background-music-play" id="background-music-play" type="button">Ⅱ 暂停</button>
+        </div>
+    </div>
+
+    <section class="cover" aria-labelledby="cover-title">
+        <div class="cover__top"><span>一份只属于今天的礼物</span><span>生日快乐 · 11 / 08(07)</span></div>
+        <div class="cover__content">
+            <div>
+                <p class="eyebrow">SPECIAL DELIVERY / FOR YOU</p>
+                <h1 id="cover-title">生日快乐，<br><em>李汪函</em></h1>
+                <p class="cover__message">今天你是主角，愿新的一岁，有开心的事，喜欢的人，还有轻松快乐的日子</p>
+                <button class="open-button" id="open-gift" type="button" aria-expanded="false"
+                    aria-controls="birthday-content">拆开礼物 <span aria-hidden="true">↘</span></button>
+                <p class="cover__hint">里面装着一些想对你说的话</p>
+            </div>
+            <div class="gift-art" aria-hidden="true"><span class="gift-art__number">HBD</span></div>
+        </div>
+        <div class="cover__bottom"><span>今天请尽情收下所有祝福</span><span>SCROLL TO OPEN</span></div>
+    </section>
+
+
+
+    <canvas class="fireworks" id="fireworks" aria-hidden="true"></canvas>
+
+    <main id="birthday-content" hidden>
+        <div class="content">
+            <header class="intro">
+                <p class="eyebrow">A LITTLE ALBUM OF US</p>
+                <h2 id="main-title" tabindex="-1">有些日子，<br>因为有你才特别</h2>
+                <p>把一起经历过的小事收好，等想念的时候，再慢慢翻出来看</p>
+            </header>
+
+            <section class="section" aria-labelledby="memory-title">
+                <div class="section-heading">
+                    <p class="eyebrow">01 / THE GOOD DAYS</p>
+                    <h2 id="memory-title">我们的回忆</h2>
+                    <p>那些一起走过的日子，都值得好好收藏</p>
+                </div>
+                <div class="memory-grid">
+                    <article class="memory">
+                        <img class="memory__photo" src="birthday.jpg" alt="生日主角开心大笑的照片" loading="lazy">
+                        <div class="memory__body"><span class="memory__number">MEMORY 01</span>
+                            <h3>笑这么开心 o O</h3>
+                            <p>！？早些时候？！</p>
+                        </div>
+                    </article>
+                    <article class="memory">
+                        <img class="memory__photo" src="birthday1.jpg" alt="兄弟在教室里的合影" loading="lazy">
+                        <div class="memory__body"><span class="memory__number">MEMORY 02</span>
+                            <h3>茄子:D</h3>
+                            <p>!耶!</p>
+                        </div>
+                    </article>
+                    <article class="memory">
+                        <img class="memory__photo" src="birthday.6.jpg" alt="兄弟在路边骑车的照片" loading="lazy">
+                        <div class="memory__body"><span class="memory__number">MEMORY 03</span>
+                            <h3>雷霆压弯</h3>
+                            <p>离18差俩年，驾龄已满三年</p>
+                        </div>
+                    </article>
+                    <article class="memory">
+                        <img class="memory__photo" src="birthday2.jpg" alt="四位兄弟的正式合照" loading="lazy">
+                        <div class="memory__body"><span class="memory__number">MEMORY 04</span>
+                            <h3>四海同袍，手足同心</h3>
+                            <p>手足相伴，岁岁同行</p>
+                        </div>
+                    </article>
+                    <article class="memory">
+                        <img class="memory__photo" src="birthday.3.jpg" alt="兄弟们并肩站在山间的背影" loading="lazy">
+                        <div class="memory__body"><span class="memory__number">MEMORY 05</span>
+                            <h3>与君共朝夕</h3>
+                            <p>并肩而立，万事可期</p>
+                        </div>
+                    </article>
+                    <article class="memory">
+                        <img class="memory__photo" src="birthday4.jpg" alt="兄弟在地上做俯卧撑的搞笑瞬间" loading="lazy">
+                        <div class="memory__body"><span class="memory__number">MEMORY 06</span>
+                            <h3>！？燃尽了？！</h3>
+                            <p>禁止侵犯我国领土</p>
+                        </div>
+                    </article>
+                    <article class="memory">
+                        <img class="memory__photo" src="birthday5.jpg" alt="兄弟们手机相册里的反差合照" loading="lazy">
+                        <div class="memory__body"><span class="memory__number">MEMORY 07</span>
+                            <h3>顶级反差</h3>
+                            <p>网恋需谨慎 :D</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="section" aria-labelledby="notes-title">
+                <div class="section-heading">
+                    <p class="eyebrow">02 / NOTES FOR YOU</p>
+                    <h2 id="notes-title">兄弟们想说的话</h2>
+                </div>
+                <div class="notes-panel">
+                    <div class="notes__danmaku" aria-label="兄弟祝福弹幕">
+                        <div class="notes__danmaku-head"><span>BROTHERS ONLINE · 弹幕</span></div>
+                        <div class="notes__tracks" id="danmaku-tracks" aria-live="off">
+                            <div class="danmaku__lane"></div>
+                            <div class="danmaku__lane"></div>
+                            <div class="danmaku__lane"></div>
+                        </div>
+                    </div>
+                    <div class="notes">
+                        <article class="note">
+                            <blockquote>这么个事？哦！今天是你来到这个世界上的5840天，在接下来的日子里顺风顺水顺财神！！！我再说一句，不要忘本o~！！！！！！</blockquote>
+                            <p>邹俊宇</p>
+                        </article>
+                        <article class="note">
+                            <blockquote>汪函，生日快乐，正式迎来16岁啦！这个年纪真的特别珍贵，有热血，有憧憬，也会偶尔遇到压力和烦心事。不用逼自己事事完美，大胆去喜欢、去尝试，好好享受属于你的少年时光。不管是学习上的难题，还是生活里的糟心事，随时都可以跟我说。愿你永远鲜活坦荡，眼里一直有光，平安顺遂，想要的都慢慢奔赴到手，天天都有好心情！</blockquote>
+                            <p>邹思程</p>
+                        </article>
+                        <article class="note">
+                            <blockquote>世上的路有许多条，每个人都有属于自己的那条</blockquote>
+                            <p>董迪</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section season-game" aria-labelledby="season-game-title">
+                <div class="season-widget">
+                    <div class="season-heading">
+                        <p class="eyebrow">03 / FOUR SEASONS</p>
+                        <h2 id="season-game-title">时光画框</h2>
+                        <p>转动时钟，让四季慢慢流转。</p>
+                    </div>
+
+                    <div class="season-panel">
+                        <!-- 画框 -->
+                        <div class="season-frame">
+                            <div class="season-frame__art">
+                                <!-- 春：樱花 -->
+                                <svg class="season-artwork is-active" data-season="spring" viewBox="0 0 720 405"
+                                    aria-hidden="true">
+                                    <defs>
+                                        <linearGradient id="spring-sky" x2="0" y2="1">
+                                            <stop stop-color="#a9d8e8" />
+                                            <stop offset="1" stop-color="#edf4d8" />
+                                        </linearGradient>
+                                    </defs>
+                                    <rect width="720" height="405" fill="url(#spring-sky)" />
+                                    <circle cx="555" cy="82" r="37" fill="#fff0b0" />
+                                    <path d="M0 286Q152 218 324 286T720 266V405H0Z" fill="#a8c881" />
+                                    <path d="M0 332Q202 278 382 337T720 310V405H0Z" fill="#668d5c" />
+                                    <path
+                                        d="M492 405Q493 301 536 220Q562 164 614 114M527 250Q482 194 445 163M554 204Q612 196 666 162M535 292Q599 270 651 230"
+                                        fill="none" stroke="#674b3c" stroke-width="18" stroke-linecap="round" />
+                                    <g fill="#f59fbd">
+                                        <circle cx="438" cy="157" r="19" />
+                                        <circle cx="455" cy="145" r="18" />
+                                        <circle cx="463" cy="166" r="20" />
+                                        <circle cx="610" cy="106" r="21" />
+                                        <circle cx="629" cy="119" r="20" />
+                                        <circle cx="597" cy="128" r="19" />
+                                        <circle cx="659" cy="154" r="19" />
+                                        <circle cx="679" cy="166" r="18" />
+                                        <circle cx="649" cy="176" r="20" />
+                                        <circle cx="643" cy="222" r="18" />
+                                        <circle cx="662" cy="236" r="20" />
+                                        <circle cx="631" cy="242" r="18" />
+                                    </g>
+                                    <g fill="#fff0c8">
+                                        <circle cx="457" cy="157" r="5" />
+                                        <circle cx="613" cy="119" r="5" />
+                                        <circle cx="660" cy="165" r="5" />
+                                        <circle cx="646" cy="232" r="5" />
+                                    </g>
+                                </svg>
+
+                                <!-- 夏：荷花 -->
+                                <svg class="season-artwork" data-season="summer" viewBox="0 0 720 405"
+                                    aria-hidden="true">
+                                    <defs>
+                                        <linearGradient id="summer-sky" x2="0" y2="1">
+                                            <stop stop-color="#91d4e5" />
+                                            <stop offset="1" stop-color="#d9f0cf" />
+                                        </linearGradient>
+                                    </defs>
+                                    <rect width="720" height="405" fill="url(#summer-sky)" />
+                                    <circle cx="544" cy="77" r="39" fill="#fff0a7" />
+                                    <path d="M0 221Q165 178 330 222T720 207V405H0Z" fill="#92bd77" />
+                                    <rect y="255" width="720" height="150" fill="#4c9fa1" />
+                                    <path d="M0 284Q150 260 300 286T720 279M0 350Q170 327 360 351T720 340" fill="none"
+                                        stroke="#9bd5c5" stroke-width="5" opacity=".65" />
+                                    <g fill="#367d5d">
+                                        <ellipse cx="167" cy="315" rx="71" ry="24" />
+                                        <ellipse cx="493" cy="345" rx="84" ry="27" />
+                                        <ellipse cx="592" cy="291" rx="61" ry="20" />
+                                    </g>
+                                    <g fill="#f48ca5">
+                                        <ellipse cx="290" cy="278" rx="11" ry="36" />
+                                        <ellipse cx="290" cy="278" rx="11" ry="36" transform="rotate(45 290 278)" />
+                                        <ellipse cx="290" cy="278" rx="11" ry="36" transform="rotate(90 290 278)" />
+                                        <ellipse cx="290" cy="278" rx="11" ry="36" transform="rotate(135 290 278)" />
+                                    </g>
+                                    <circle cx="290" cy="278" r="15" fill="#ffd66f" />
+                                    <g fill="#fff0d0">
+                                        <ellipse cx="522" cy="322" rx="8" ry="24" />
+                                        <ellipse cx="522" cy="322" rx="8" ry="24" transform="rotate(60 522 322)" />
+                                        <ellipse cx="522" cy="322" rx="8" ry="24" transform="rotate(120 522 322)" />
+                                    </g>
+                                    <circle cx="522" cy="322" r="10" fill="#e6aa50" />
+                                </svg>
+
+                                <!-- 秋：枫树 -->
+                                <svg class="season-artwork" data-season="autumn" viewBox="0 0 720 405"
+                                    aria-hidden="true">
+                                    <defs>
+                                        <linearGradient id="autumn-sky" x2="0" y2="1">
+                                            <stop stop-color="#d6a36d" />
+                                            <stop offset="1" stop-color="#f3d9a0" />
+                                        </linearGradient>
+                                    </defs>
+                                    <rect width="720" height="405" fill="url(#autumn-sky)" />
+                                    <circle cx="156" cy="84" r="34" fill="#ffe29a" />
+                                    <path d="M0 294Q168 240 340 297T720 278V405H0Z" fill="#b77a48" />
+                                    <path d="M0 341Q188 300 377 349T720 329V405H0Z" fill="#7d6040" />
+                                    <path
+                                        d="M490 348Q474 238 511 160Q542 96 521 45M509 197Q436 152 404 104M511 157Q579 134 626 82M494 263Q566 219 624 186"
+                                        fill="none" stroke="#684332" stroke-width="22" stroke-linecap="round" />
+                                    <g fill="#c75b37">
+                                        <circle cx="404" cy="92" r="39" />
+                                        <circle cx="445" cy="108" r="42" />
+                                        <circle cx="471" cy="68" r="36" />
+                                        <circle cx="553" cy="61" r="39" />
+                                        <circle cx="592" cy="84" r="44" />
+                                        <circle cx="624" cy="131" r="36" />
+                                        <circle cx="431" cy="150" r="39" />
+                                        <circle cx="563" cy="165" r="43" />
+                                        <circle cx="611" cy="194" r="35" />
+                                    </g>
+                                    <g fill="#e99b3e">
+                                        <circle cx="378" cy="132" r="20" />
+                                        <circle cx="488" cy="116" r="23" />
+                                        <circle cx="538" cy="100" r="19" />
+                                        <circle cx="595" cy="139" r="22" />
+                                        <circle cx="457" cy="58" r="17" />
+                                        <circle cx="650" cy="104" r="18" />
+                                    </g>
+                                    <g fill="#f6ca62">
+                                        <path d="M313 315q18-28 33 0q-15 28-33 0" />
+                                        <path d="M352 351q17-25 31 0q-14 25-31 0" />
+                                        <path d="M243 337q17-25 31 0q-14 25-31 0" />
+                                    </g>
+                                </svg>
+
+                                <!-- 冬：雪人 -->
+                                <svg class="season-artwork" data-season="winter" viewBox="0 0 720 405"
+                                    aria-hidden="true">
+                                    <defs>
+                                        <linearGradient id="winter-sky" x2="0" y2="1">
+                                            <stop stop-color="#8fb9d2" />
+                                            <stop offset="1" stop-color="#e1eef0" />
+                                        </linearGradient>
+                                    </defs>
+                                    <rect width="720" height="405" fill="url(#winter-sky)" />
+                                    <circle cx="551" cy="76" r="31" fill="#fff6d8" />
+                                    <path d="M0 239L126 112l96 127 114-154 132 154 103-120 149 120v166H0Z"
+                                        fill="#eaf2ef" />
+                                    <path d="M0 286Q172 245 340 296T720 277V405H0Z" fill="#cbdde1" />
+                                    <g fill="#557a72">
+                                        <path d="M89 300l33-82 33 82h-19l31 54H77l31-54Z" />
+                                        <path d="M609 292l29-71 30 71h-17l27 45h-79l27-45Z" />
+                                    </g>
+                                    <g fill="#f8fbf6">
+                                        <circle cx="343" cy="260" r="44" />
+                                        <circle cx="343" cy="201" r="31" />
+                                        <circle cx="343" cy="156" r="22" />
+                                    </g>
+                                    <path d="M315 207q28 13 56 0" fill="none" stroke="#8f4550" stroke-width="9" />
+                                    <circle cx="336" cy="153" r="3" fill="#243b3a" />
+                                    <circle cx="351" cy="153" r="3" fill="#243b3a" />
+                                    <path d="M359 160l17 5-17 5Z" fill="#e88a4a" />
+                                    <path d="M320 123l23-35 22 35Z" fill="#3e655d" />
+                                    <circle cx="343" cy="87" r="8" fill="#cf6254" />
+                                    <g fill="#fff">
+                                        <circle cx="83" cy="84" r="3" />
+                                        <circle cx="208" cy="143" r="2" />
+                                        <circle cx="449" cy="83" r="3" />
+                                        <circle cx="645" cy="156" r="2" />
+                                        <circle cx="527" cy="197" r="2" />
+                                        <circle cx="268" cy="71" r="2" />
+                                    </g>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 时钟 -->
+                    <div class="season-clock-area">
+                        <div class="season-clock" id="season-clock" role="slider" tabindex="0" aria-label="季节时钟，拖动旋转"
+                            aria-valuemin="0" aria-valuemax="360" aria-valuenow="0">
+                            <span class="season-clock__number season-clock__number--12">12</span>
+                            <span class="season-clock__number season-clock__number--3">3</span>
+                            <span class="season-clock__number season-clock__number--6">6</span>
+                            <span class="season-clock__number season-clock__number--9">9</span>
+                            <span class="season-clock__minute" id="season-clock-minute"></span>
+                            <span class="season-clock__hub"></span>
+                        </div>
+                    </div>
+
+                    <!-- 信件：信封（SVG图片）+ 信纸 -->
+                    <div class="season-letter" id="season-letter" aria-hidden="true"
+                        style="opacity: 0; transform: translateY(50px) scale(0.92);">
+                        <div class="letter-envelope" id="letter-envelope" role="button" tabindex="-1" aria-label="打开信封"
+                            aria-expanded="false" aria-disabled="true">
+                            <svg class="envelope-svg" viewBox="0 -32 240 190" aria-hidden="true">
+                                <!-- 信封主体 -->
+                                <rect x="8" y="40" width="224" height="112" rx="6" fill="#f3dfb2" stroke="#9a7049"
+                                    stroke-width="2" />
+                                <!-- 信封内里（翻盖打开后可见） -->
+                                <rect x="22" y="54" width="196" height="84" rx="3" fill="#fdf6e8" />
+                                <!-- 翻盖 -->
+                                <path class="envelope-flap" d="M8 40 L120 108 L232 40" fill="#e7c98f" stroke="#9a7049"
+                                    stroke-width="2" />
+                            </svg>
+                        </div>
+                        <div class="letter-paper" id="letter-paper" hidden>
+                            <p>春来，夏至，秋去，冬临，四季轮转，时间悄然为你增添了一抹色彩，而今，你那光彩的笑容将如太阳般耀眼！</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section game" aria-labelledby="game-title">
+                <div>
+                    <p class="eyebrow">03 / MAKE A WISH</p>
+                    <h2 id="game-title">点亮蜡烛，许个愿吧</h2>
+                    <p class="game__copy">先点一下蛋糕插上 16 根蜡烛，再点一下吹灭它们。愿望放心里，然后抽一支今日运势签</p>
+                </div>
+                <div class="game__play">
+                    <button class="cake" id="cake-button" type="button" aria-label="点击蛋糕插上16根蜡烛">
+                        <span class="cake__candles" id="cake-candles" aria-hidden="true">
+                            <span class="candle-ring candle-ring--top"></span>
+                            <span class="candle-ring candle-ring--middle"></span>
+                            <span class="candle-ring candle-ring--bottom"></span>
+                        </span>
+                        <span class="cake__tier cake__tier--top" aria-hidden="true"></span>
+                        <span class="cake__tier cake__tier--middle" aria-hidden="true"></span>
+                        <span class="cake__tier cake__tier--bottom" aria-hidden="true"></span>
+                    </button>
+                    <p class="game__status" id="cake-status" aria-live="polite">点一下蛋糕，插上 16 根蜡烛</p>
+                    <button class="game__action" id="wish-button" type="button" hidden>我许好愿了</button>
+                    <button class="game__action" id="fortune-button" type="button" hidden>抽今日运势</button>
+                    <p class="fortune-result" id="fortune-result" aria-live="polite" hidden></p>
+                </div>
+            </section>
+
+            <section class="section surprise" aria-labelledby="surprise-title">
+                <div>
+                    <p class="eyebrow">04 / ONE LAST THING</p>
+                    <h2 id="surprise-title">最后，还有一份心意</h2>
+                    <p class="surprise__intro">给最讲义气的兄弟，留一段认真的话</p>
+                </div>
+                <button class="surprise__button" id="reveal-surprise" type="button" aria-expanded="false"
+                    aria-controls="surprise-content">揭开惊喜</button>
+                <div class="surprise__content" id="surprise-content" hidden>
+                    <div class="surprise__credits-frame" id="surprise-credits-frame">
+                        <img class="surprise__image" id="surprise-image" src="birthday8.jpg" alt="生日惊喜图片">
+                        <div class="surprise__fell-title">暗黑大帝已陨落</div>
+                        <div class="surprise__credits" aria-label="制作人名单">
+                            <div class="surprise__credits-track">
+                                <div class="surprise__credits-group">
+                                    <div class="surprise__credits-list">
+                                        <span>主创：董↑迪↓</span>
+                                        <span>编程：Open-AI \ DeepSeek</span>
+                                        <span>制作：董↑迪↓ \ 邹思程 \ 邹俊宇</span>
+                                        <span>素材：Open-AI \ 邹思程 \ 邹俊宇 \ 董↑迪↓</span>
+                                        <span>特别鸣谢：贝利亚大帝</span>
+                                    </div>
+                                </div>
+                                <div class="surprise__credits-group" aria-hidden="true">
+                                    <div class="surprise__credits-list">
+                                        <span>主创：董↑迪↓</span>
+                                        <span>编程：Open-AI \ DeepSeek</span>
+                                        <span>制作：董↑迪↓ \ 邹思程 \ 邹俊宇</span>
+                                        <span>素材：Open-AI \ 邹思程 \ 邹俊宇 \ 董↑迪↓</span>
+                                        <span>特别鸣谢：贝利亚大帝</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="surprise__reveal" id="surprise-message">
+                        我们很庆幸人生中遇到了你，你是一个讲义气的人，会把很多话放在心里，作为兄弟我们很多话都可以慢慢说，时间充裕，我们以后还有很多的路可以走，当下就算有不顺心的事情，但我们只要向前看，还有很多人和事在等着我们去认识与探索，有人曾说过，人生近看悲剧，远看喜剧，我们都有无限可能！
+                    </p>
+                </div>
+            </section>
+
+            <div class="surprise__egg" id="surprise-egg" hidden>
+                <img class="surprise__egg-image" src="birthday9.jpg" alt="彩蛋图片">
+                <p class="surprise__egg-message">BBBBBBbs哥们，这一个网站花我这么多Token,4000多行代码真有你的，我大肥鱼是贪吃了点，但你这比我还能吃，我再也不给你用了， 哼 &gt;:(</p>
+            </div>
+
+            <footer class="footer"><span>为你认真准备的一份小礼物</span><span>生日快乐，明年也要一起庆祝</span></footer>
+        </div>
+    </main>
+
+    <script>
+        const backgroundMusic = document.querySelector("#background-music");
+        const backgroundMusicToggle = document.querySelector("#background-music-toggle");
+        const backgroundMusicPanel = document.querySelector("#background-music-panel");
+        const backgroundMusicProgress = document.querySelector("#background-music-progress");
+        const backgroundMusicTime = document.querySelector("#background-music-time");
+        const backgroundMusicPlay = document.querySelector("#background-music-play");
+        let backgroundMusicEnabled = true;
+        let isSeekingBackgroundMusic = false;
+        let isPointerSeekingBackgroundMusic = false;
+        let backgroundMusicProgressFrame = 0;
+
+        const formatMusicTime = (seconds) => {
+            const safeSeconds = Number.isFinite(seconds) ? Math.max(0, Math.floor(seconds)) : 0;
+            const minutes = Math.floor(safeSeconds / 60);
+            const remainder = safeSeconds % 60;
+            return `${String(minutes).padStart(2, "0")}:${String(remainder).padStart(2, "0")}`;
+        };
+
+        const updateBackgroundMusicProgress = () => {
+            if (Number.isFinite(backgroundMusic.duration) && backgroundMusic.duration > 0) {
+                if (!isSeekingBackgroundMusic) {
+                    backgroundMusicProgress.value = Math.round(backgroundMusic.currentTime / backgroundMusic.duration * 1000);
+                }
+                backgroundMusicTime.textContent =
+                    `${formatMusicTime(backgroundMusic.currentTime)} / ${formatMusicTime(backgroundMusic.duration)}`;
+            }
+            backgroundMusicPlay.textContent = backgroundMusic.paused ? "▶ 播放" : "Ⅱ 暂停";
+        };
+
+        const seekBackgroundMusic = () => {
+            if (!Number.isFinite(backgroundMusic.duration) || backgroundMusic.duration <= 0) return;
+            const targetTime = Number(backgroundMusicProgress.value) / 1000 * backgroundMusic.duration;
+            if (Number.isFinite(targetTime)) {
+                backgroundMusic.currentTime = Math.min(backgroundMusic.duration, Math.max(0, targetTime));
+            }
+        };
+
+        const updateBackgroundMusicButton = () => {
+            backgroundMusicToggle.setAttribute("aria-pressed", String(backgroundMusicEnabled));
+            backgroundMusicToggle.setAttribute("aria-label", backgroundMusicPanel.hidden ? "展开背景音乐控制" : "收起背景音乐控制");
+            backgroundMusicToggle.title = backgroundMusicPanel.hidden ? "展开背景音乐控制" : "收起背景音乐控制";
+            backgroundMusicToggle.textContent = backgroundMusicEnabled ? "♪" : "♫";
+        };
+
+        const playBackgroundMusic = () => {
+            if (!backgroundMusicEnabled) return;
+            backgroundMusic.play().catch(() => { });
+        };
+
+        backgroundMusic.volume = 0.45;
+        backgroundMusic.load();
+        playBackgroundMusic();
+        const unlockBackgroundMusic = () => {
+            backgroundMusic.load();
+            playBackgroundMusic();
+        };
+        document.addEventListener("pointerdown", unlockBackgroundMusic, { once: true });
+        document.addEventListener("keydown", unlockBackgroundMusic, { once: true });
+
+        backgroundMusicToggle.addEventListener("click", () => {
+
+            backgroundMusicPanel.hidden = !backgroundMusicPanel.hidden;
+            backgroundMusicToggle.setAttribute("aria-expanded", String(!backgroundMusicPanel.hidden));
+            if (!backgroundMusicPanel.hidden) updateBackgroundMusicProgress();
+            updateBackgroundMusicButton();
+        });
+
+        backgroundMusicProgress.addEventListener("pointerdown", () => {
+            isSeekingBackgroundMusic = true;
+            isPointerSeekingBackgroundMusic = true;
+        });
+        backgroundMusicProgress.addEventListener("input", () => {
+            const targetTime = Number(backgroundMusicProgress.value) / 1000 * backgroundMusic.duration;
+            if (Number.isFinite(targetTime)) {
+                backgroundMusicTime.textContent =
+                    `${formatMusicTime(targetTime)} / ${formatMusicTime(backgroundMusic.duration)}`;
+            }
+        });
+        backgroundMusicProgress.addEventListener("change", () => {
+            seekBackgroundMusic();
+            if (!isPointerSeekingBackgroundMusic) isSeekingBackgroundMusic = false;
+            updateBackgroundMusicProgress();
+        });
+        ["pointerup", "pointercancel"].forEach((eventName) => {
+            backgroundMusicProgress.addEventListener(eventName, () => {
+                isPointerSeekingBackgroundMusic = false;
+                seekBackgroundMusic();
+                updateBackgroundMusicProgress();
+            });
+        });
+        window.addEventListener("pointerup", () => {
+            if (!isPointerSeekingBackgroundMusic) return;
+            isPointerSeekingBackgroundMusic = false;
+            seekBackgroundMusic();
+            updateBackgroundMusicProgress();
+        });
+        backgroundMusic.addEventListener("seeked", () => {
+            isSeekingBackgroundMusic = false;
+            updateBackgroundMusicProgress();
+        });
+
+        backgroundMusicPlay.addEventListener("click", () => {
+            if (backgroundMusic.paused) {
+                backgroundMusicEnabled = true;
+                playBackgroundMusic();
+            } else {
+                backgroundMusic.pause();
+                backgroundMusicEnabled = false;
+            }
+            updateBackgroundMusicButton();
+            updateBackgroundMusicProgress();
+        });
+
+        backgroundMusic.addEventListener("timeupdate", updateBackgroundMusicProgress);
+        backgroundMusic.addEventListener("loadedmetadata", updateBackgroundMusicProgress);
+        backgroundMusic.addEventListener("play", updateBackgroundMusicProgress);
+        backgroundMusic.addEventListener("pause", updateBackgroundMusicProgress);
+        const followBackgroundMusicProgress = () => {
+            updateBackgroundMusicProgress();
+            if (!backgroundMusic.paused) {
+                backgroundMusicProgressFrame = requestAnimationFrame(followBackgroundMusicProgress);
+            } else {
+                backgroundMusicProgressFrame = 0;
+            }
+        };
+        backgroundMusic.addEventListener("playing", () => {
+            cancelAnimationFrame(backgroundMusicProgressFrame);
+            followBackgroundMusicProgress();
+        });
+
+        updateBackgroundMusicButton();
+
+        const openGift = document.querySelector("#open-gift");
+        const birthdayContent = document.querySelector("#birthday-content");
+        const mainTitle = document.querySelector("#main-title");
+        const revealButton = document.querySelector("#reveal-surprise");
+        const surpriseMessage = document.querySelector("#surprise-message");
+        const surpriseContent = document.querySelector("#surprise-content");
+        const surpriseEgg = document.querySelector("#surprise-egg");
+        const surpriseImage = document.querySelector("#surprise-image");
+        const surpriseCreditsFrame = document.querySelector("#surprise-credits-frame");
+        let surpriseCreditsStarted = false;
+        const cakeButton = document.querySelector("#cake-button");
+        const cakeCandles = document.querySelector("#cake-candles");
+        const cakeStatus = document.querySelector("#cake-status");
+        const wishButton = document.querySelector("#wish-button");
+        const fortuneButton = document.querySelector("#fortune-button");
+        const fortuneResult = document.querySelector("#fortune-result");
+        const fireworksCanvas = document.querySelector("#fireworks");
+        const danmakuLanes = [...document.querySelectorAll("#danmaku-tracks .danmaku__lane")];
+        const danmakuMessages = [
+            "Happy Birthday!",
+            "Happy Birthday to you~~!",
+            "那必须是我了",
+            "四人同行，家和万事兴！",
+            "一门四兄弟，手足情深，愿各自安好，互相扶持",
+            "兄弟一心，黄土成金",
+            "友谊长存！！！",
+            "我叫你一声兄弟，一声？？一生！！！",
+            "有事喊一声，没事常聚聚！",
+            "我去这不阴？",
+            "这下玩大了 T-T",
+            "灭建国是谁？",
+            "风中传来鲜甜，是幸福的气味吗？",
+            "你不是武器，你是我们的兄弟",
+            "听说有雷霆压弯在此？真的假的？",
+            "难道那个侵犯我国领土的就是他？？？我去真是他",
+            "网恋需谨慎啊，不然钱包空荡荡.....",
+            "！？耶？！",
+            "笑这么开心？那你可有福了哈哈",
+            "难道说他真的是？",
+            "我搜了全世界最帅男人搜不到你，这是为啥",
+            "大家好，主播不飞福建的",
+            "这才是网络的真谛吗 !  O o",
+            "话话话话话，",
+            "牙真白，",
+            "这真帅吧",
+            "Congratulations!!!",
+            "caillo!",
+            "你想向兄弟展示你高超的技艺时Be like:",
+            "这么强？！",
+            "我喝水如呼吸般简单"
+        ];
+        const recentDanmaku = new Map();
+        let danmakuTimer = null;
+        let cakeStage = 0;
+
+        openGift.addEventListener("click", () => {
+            birthdayContent.hidden = false;
+            openGift.setAttribute("aria-expanded", "true");
+            mainTitle.focus({ preventScroll: true });
+            birthdayContent.scrollIntoView({ behavior: "smooth", block: "start" });
+            startDanmaku();
+        });
+
+        function showDanmaku() {
+            const now = Date.now();
+            const candidates = danmakuMessages.filter((message) => now - (recentDanmaku.get(message) || 0) > 20000);
+            const availableLanes = danmakuLanes.filter((lane) => !lane.firstElementChild);
+            if (!candidates.length || !availableLanes.length) return;
+
+            const message = candidates[Math.floor(Math.random() * candidates.length)];
+            const lane = availableLanes[Math.floor(Math.random() * availableLanes.length)];
+            const item = document.createElement("span");
+            item.className = "danmaku__item";
+            item.textContent = message;
+            item.style.setProperty("--duration", `${5.5 + Math.random() * 2}s`);
+            item.style.setProperty("--duration", `${2.75 + Math.random()}s`);
+            lane.append(item);
+            recentDanmaku.set(message, now);
+            item.addEventListener("animationend", () => item.remove(), { once: true });
+        }
+
+        function startDanmaku() {
+            if (danmakuTimer !== null) return;
+            showDanmaku();
+            danmakuTimer = window.setInterval(showDanmaku, 500);
+        }
+
+        cakeButton.addEventListener("click", () => {
+            if (cakeStage === 0) {
+                const rings = [
+                    { name: "top", count: 3, start: 0, stagger: 110 },
+                    { name: "middle", count: 5, start: 500, stagger: 95 },
+                    { name: "bottom", count: 8, start: 1050, stagger: 80 }
+                ];
+                cakeCandles.replaceChildren(...rings.map(({ name, count, start, stagger }) => {
+                    const ring = document.createElement("span");
+                    ring.className = `candle-ring candle-ring--${name}`;
+                    ring.append(...Array.from({ length: count }, (_, index) => {
+                        const fraction = count === 1 ? .5 : index / (count - 1);
+                        const horizontalRadius = name === "top" ? 32 : 40;
+                        const horizontal = (fraction * 2 - 1) * horizontalRadius;
+                        const arcHeight = name === "top" ? 0 : 11 * Math.sqrt(Math.max(0, 1 - (horizontal / horizontalRadius) ** 2));
+                        const candle = document.createElement("span");
+                        candle.className = "candle";
+                        candle.style.setProperty("--candle-left", `${50 + horizontal}%`);
+                        candle.style.setProperty("--candle-top", `${11 + arcHeight - 28}px`);
+                        candle.style.setProperty("--delay", `${start + index * stagger}ms`);
+                        return candle;
+                    }));
+                    return ring;
+                }));
+                cakeStage = 1;
+                cakeButton.disabled = true;
+                cakeButton.setAttribute("aria-label", "点击蛋糕吹灭蜡烛并许愿");
+                cakeStatus.textContent = "蜡烛正从上往下依次插入……";
+                window.setTimeout(() => {
+                    if (cakeStage !== 1) return;
+                    cakeButton.disabled = false;
+                    cakeStatus.textContent = "16 根蜡烛插好啦！再点一下，吹灭蜡烛许个愿";
+                }, 2250);
+                return;
+            }
+
+            cakeButton.classList.add("is-out");
+            cakeButton.disabled = true;
+            cakeButton.setAttribute("aria-label", "蜡烛已吹灭");
+            cakeStage = 2;
+            cakeStatus.textContent = "蜡烛吹灭啦！把愿望放在心里";
+            wishButton.hidden = false;
+        });
+
+        wishButton.addEventListener("click", () => {
+            wishButton.hidden = true;
+            cakeStatus.textContent = "愿望已收好，来抽一支今日运势吧";
+            fortuneButton.hidden = false;
+        });
+
+        fortuneButton.addEventListener("click", () => {
+            const fortunes = [
+                "今日运势：好运正在路上，记得给自己一点耐心",
+                "今日运势：适合和兄弟见面，快乐会加倍",
+                "今日运势：小小惊喜即将出现，保持好心情",
+                "今日运势：做喜欢的事，灵感和好运都会来",
+                "今日运势：今天宜大笑，烦恼暂时靠边站",
+                "今日运势：你的愿望正在悄悄靠近"
+            ];
+            fortuneResult.textContent = fortunes[Math.floor(Math.random() * fortunes.length)];
+            fortuneResult.hidden = false;
+            fortuneButton.textContent = "再抽一次";
+        });
+
+        revealButton.addEventListener("click", () => {
+            surpriseContent.hidden = false;
+            surpriseEgg.hidden = false;
+            revealButton.setAttribute("aria-expanded", "true");
+            revealButton.textContent = "惊喜已揭晓";
+            surpriseContent.scrollIntoView({ behavior: "smooth", block: "center" });
+            launchFireworks();
+        });
+
+        const fitSurpriseImageFrame = () => {
+            if (!surpriseImage.naturalWidth || !surpriseImage.naturalHeight) return;
+            surpriseCreditsFrame.style.aspectRatio =
+                `${surpriseImage.naturalWidth} / ${surpriseImage.naturalHeight}`;
+        };
+
+        if (surpriseImage.complete) fitSurpriseImageFrame();
+        else surpriseImage.addEventListener("load", fitSurpriseImageFrame);
+
+        surpriseImage.addEventListener("click", () => {
+            if (surpriseCreditsStarted) return;
+            surpriseCreditsStarted = true;
+            surpriseImage.style.opacity = "0";
+            surpriseCreditsFrame.classList.add("is-playing");
+            window.setTimeout(() => surpriseCreditsFrame.classList.add("is-fell"), 900);
+            window.setTimeout(() => {
+                surpriseCreditsFrame.classList.remove("is-fell");
+                surpriseCreditsFrame.classList.add("is-credits-started");
+            }, 4000);
+        });
+
+        function launchFireworks() {
+            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+            const context = fireworksCanvas.getContext("2d");
+            const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+            const particles = [];
+            const colors = ["#d7ed79", "#ff755d", "#b9d9e9", "#fff0d6", "#f6c85f"];
+            let frame = 0;
+
+            fireworksCanvas.width = window.innerWidth * pixelRatio;
+            fireworksCanvas.height = window.innerHeight * pixelRatio;
+            context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+            const burst = (x, y) => {
+                for (let index = 0; index < 90; index += 1) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = 1.2 + Math.random() * 4;
+                    particles.push({
+                        x,
+                        y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        life: 45 + Math.random() * 30,
+                        color: colors[Math.floor(Math.random() * colors.length)]
+                    });
+                }
+            };
+
+            [[.16, .3], [.82, .25], [.5, .18], [.32, .42], [.7, .4], [.12, .58], [.88, .52], [.48, .62], [.68, .3]].forEach(([x, y], index) => {
+                window.setTimeout(() => burst(window.innerWidth * x, window.innerHeight * y), index * 230);
+            });
+
+            const draw = () => {
+                context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+                for (let index = particles.length - 1; index >= 0; index -= 1) {
+                    const particle = particles[index];
+                    particle.x += particle.vx;
+                    particle.y += particle.vy;
+                    particle.vy += .035;
+                    particle.life -= 1;
+                    context.globalAlpha = Math.max(particle.life / 75, 0);
+                    context.fillStyle = particle.color;
+                    context.beginPath();
+                    context.arc(particle.x, particle.y, 2.2, 0, Math.PI * 2);
+                    context.fill();
+                    if (particle.life <= 0) particles.splice(index, 1);
+                }
+                context.globalAlpha = 1;
+                frame += 1;
+                if (frame < 300) window.requestAnimationFrame(draw);
+                else context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            };
+
+            window.requestAnimationFrame(draw);
+        }
+
+        <!-- 时光画框成品交互（来自 index copy2.html） -->
+        (function () {
+            const clockEl = document.getElementById('season-clock');
+            const minuteEl = document.getElementById('season-clock-minute');
+            const artworks = Array.from(document.querySelectorAll('.season-artwork'));
+            const letterWrap = document.getElementById('season-letter');
+            const envelopeEl = document.getElementById('letter-envelope');
+            const paperEl = document.getElementById('letter-paper');
+
+            // 分针累计角度（可无限累加）
+            let minuteAngle = 0;
+            let isDragging = false;
+            let lastPointerAngle = 0;
+
+            // 信封历史最大进度（0~1），到达 1 后锁定，不因逆时针回转而消失
+            let letterMaxProgress = 0;
+            let letterOpened = false;
+
+            // 四季完整轮转一遍 = 4 圈 = 1440°
+            const FULL_YEAR_DEG = 1440;
+
+            // 季节判断：未满一圈是春(0)，之后每 360° 切换，顺时针递增/逆时针递减
+            function getSeasonIndex() {
+                if (Math.abs(minuteAngle) < 360) return 0;
+                const turns = minuteAngle >= 0
+                    ? Math.floor(minuteAngle / 360)
+                    : Math.ceil(minuteAngle / 360);
+                return ((turns % 4) + 4) % 4;
+            }
+
+            function updateUI() {
+                if (!Number.isFinite(minuteAngle)) minuteAngle = 0;
+                // 分针显示
+                const normalized = ((minuteAngle % 360) + 360) % 360;
+                minuteEl.style.transform = `rotate(${normalized}deg)`;
+
+                // 季节画面切换
+                const seasonIndex = getSeasonIndex();
+                artworks.forEach((svg, i) => {
+                    svg.classList.toggle('is-active', i === seasonIndex);
+                });
+                clockEl.setAttribute('aria-valuenow', String(Math.round(normalized)));
+
+                // 信封随四季轮转逐渐浮现
+                const raw = Math.min(Math.abs(minuteAngle), FULL_YEAR_DEG) / FULL_YEAR_DEG;
+                letterMaxProgress = Math.max(letterMaxProgress, raw);
+                const p = letterMaxProgress;
+
+                letterWrap.style.opacity = String(p);
+                letterWrap.style.transform =
+                    `translateY(${(1 - p) * 50}px) scale(${0.92 + p * 0.08})`;
+
+                const fullyVisible = p >= 0.999;
+                letterWrap.setAttribute('aria-hidden', fullyVisible ? 'false' : 'true');
+                envelopeEl.style.pointerEvents = fullyVisible ? 'auto' : 'none';
+                envelopeEl.setAttribute('aria-disabled', fullyVisible ? 'false' : 'true');
+                envelopeEl.tabIndex = fullyVisible ? 0 : -1;
+            }
+
+            // 从事件坐标算指针绝对角度（0-360，12 点为 0）
+            function pointerAngleFromEvent(evt) {
+                const rect = clockEl.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top + rect.height / 2;
+                const x = evt.clientX - cx;
+                const y = evt.clientY - cy;
+                let a = Math.atan2(x, -y) * (180 / Math.PI);
+                if (a < 0) a += 360;
+                return a;
+            }
+
+            function onPointerDown(e) {
+                if (e.button !== undefined && e.button !== 0) return;
+                e.preventDefault();
+                isDragging = true;
+                clockEl.classList.add('is-dragging');
+                lastPointerAngle = pointerAngleFromEvent(e);
+                if (clockEl.setPointerCapture) {
+                    try { clockEl.setPointerCapture(e.pointerId); } catch (_) { }
+                }
+                window.addEventListener('pointermove', onPointerMove);
+                window.addEventListener('pointerup', onPointerUp);
+                window.addEventListener('pointercancel', onPointerUp);
+            }
+
+            // 增量累加：突破 ±180° 限制
+            function onPointerMove(e) {
+                if (!isDragging) return;
+                const cur = pointerAngleFromEvent(e);
+                let delta = cur - lastPointerAngle;
+                if (delta > 180) delta -= 360;
+                if (delta < -180) delta += 360;
+                lastPointerAngle = cur;
+                minuteAngle += delta;
+                updateUI();
+            }
+
+            function onPointerUp(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                clockEl.classList.remove('is-dragging');
+                window.removeEventListener('pointermove', onPointerMove);
+                window.removeEventListener('pointerup', onPointerUp);
+                window.removeEventListener('pointercancel', onPointerUp);
+                if (clockEl.releasePointerCapture && e.pointerId !== undefined) {
+                    try { clockEl.releasePointerCapture(e.pointerId); } catch (_) { }
+                }
+            }
+
+            // 键盘辅助：左右方向键每次 90°
+            clockEl.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+                    e.preventDefault(); minuteAngle += 90; updateUI();
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+                    e.preventDefault(); minuteAngle -= 90; updateUI();
+                } else if (e.key === 'Home') {
+                    e.preventDefault(); minuteAngle = 0; updateUI();
+                }
+            });
+
+            // 打开信封：翻盖翻开 → 信纸从信封里慢慢浮现、由小变大
+            function openLetter() {
+                if (letterOpened) return;
+                if (letterMaxProgress < 0.999) return;
+                letterOpened = true;
+                envelopeEl.classList.add('is-open');
+                envelopeEl.setAttribute('aria-expanded', 'true');
+                // 等翻盖翻开一部分后，信纸再出现
+                window.setTimeout(() => {
+                    paperEl.hidden = false;
+                }, 350);
+            }
+
+            envelopeEl.addEventListener('click', openLetter);
+            envelopeEl.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    openLetter();
+                }
+            });
+
+            // 初始化
+            updateUI();
+            clockEl.addEventListener('pointerdown', onPointerDown);
+            clockEl.addEventListener('dragstart', (e) => e.preventDefault());
+        })();
+    </script>
+</body>
+
+</html>
